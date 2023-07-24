@@ -15,6 +15,11 @@ from models import Walk, Bunny, Path
 
 fake = Faker()
 
+def delete_data():
+    Walk.query.delete()
+    Bunny.query.delete()
+    Path.query.delete()
+
 def create_fake_walk():
     date = fake.date()
     start_time = fake.time()
@@ -35,12 +40,11 @@ def create_fake_walk():
 def create_fake_bunny():
     name = fake.first_name()
     description = fake.sentence()
-    headshot = fake.image_url()
 
     bunny = Bunny(
         name=name,
         description=description,
-        headshot=headshot,
+        headshot="https://png.pngtree.com/element_our/png/20180929/rabbit-png_121076.jpg",
     )
 
     return bunny
@@ -76,5 +80,6 @@ if __name__ == '__main__':
     fake = Faker()
     with app.app_context():
         print("Starting seed...")
+        delete_data()
         generate_fake_data()
         print("... seed complete")
