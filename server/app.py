@@ -90,7 +90,6 @@ class Bunnies(Resource):
 
         return response
 
-
     # delete a bunny - TBC
     def delete(self, bunny_id):
         bunny = Bunny.query.filter_by(id=bunny_id).first()
@@ -100,6 +99,22 @@ class Bunnies(Resource):
         response = make_response(
             "deletion completed", 
             204
+        )
+
+        return response
+    
+    # edit a bunny's information 
+    def patch(self, bunny_id):
+        form_json = request.get_json()
+        bunny = Bunny.query.filter_by(id=bunny_id).first()
+        bunny.name = form_json['name']
+        bunny.description = form_json['description']
+        bunny.headshot = form_json['headshot']
+        db.session.commit()
+        
+        response = make_response(
+            bunny.to_dict(), 
+            200 # this status code may be temp => want to see edits in response for now
         )
 
         return response
@@ -147,7 +162,21 @@ class Paths(Resource):
         )
 
         return response
+    
+    # edit a path's details
+    def patch(self, path_id):
+        form_json = request.get_json()
+        path = Path.query.filter_by(id=path_id).first()
+        path.name = form_json['name']
+        path.description = form_json['description']
+        db.session.commit()
 
+        response = make_response(
+            path.to_dict(), 
+            200
+        )
+
+        return response
 
 api.add_resource(Paths, '/paths', endpoint="paths")
 api.add_resource(Paths, '/paths/<int:path_id>/', endpoint="path_by_id")
