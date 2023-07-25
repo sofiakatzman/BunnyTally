@@ -8,6 +8,7 @@ import Bunnies from "./Bunnies"
 import Paths from "./Paths"
 import CreatePath from "./CreatePath"
 import CreateBunny from "./CreateBunny"
+import CreateWalk from "./CreateWalk"
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/paths" element={<Paths />} />
           <Route path="/create/path" element={<CreatePath />} />
           <Route path="/create/bunny" element={<CreateBunny />} />
+          <Route path="/create/walk" element={<CreateWalk />}/>
         </Routes>
       </Router>
     </>
