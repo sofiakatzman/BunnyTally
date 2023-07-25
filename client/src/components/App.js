@@ -1,5 +1,6 @@
-import React from "react"
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom" // Import Routes
+import React, { useEffect, useState } from "react"
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom" 
+
 
 import Home from "./Home"
 import Navigation from "./Navigation"
@@ -11,6 +12,14 @@ import CreateBunny from "./CreateBunny"
 import CreateWalk from "./CreateWalk"
 
 function App() {
+  const [bunnies, setBunnies] = useState(null)
+
+  useEffect(() => {
+    fetch("/bunnies")
+      .then((r) => r.json())
+      .then((data) => setBunnies(data))
+  }, [])
+
   return (
     <>
       <Router>
@@ -18,11 +27,11 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/walks" element={<Walks />} />
-          <Route path="/bunnies" element={<Bunnies />} />
+          <Route path="/bunnies" element={<Bunnies bunnies={bunnies} setBunnies={setBunnies}/>} />
           <Route path="/paths" element={<Paths />} />
           <Route path="/create/path" element={<CreatePath />} />
           <Route path="/create/bunny" element={<CreateBunny />} />
-          <Route path="/create/walk" element={<CreateWalk />}/>
+          <Route path="/create/walk" element={<CreateWalk bunnies={bunnies} setBunnies={setBunnies}/>}/>
         </Routes>
       </Router>
     </>

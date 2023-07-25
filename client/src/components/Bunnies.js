@@ -1,14 +1,6 @@
-import React, { useEffect, useState } from "react"
+import React from "react"
 
-function Bunnies() {
-  const [bunnies, setBunnies] = useState(null)
-
-  useEffect(() => {
-    fetch("/bunnies")
-      .then((r) => r.json())
-      .then((data) => setBunnies(data))
-  }, [])
-
+function Bunnies({bunnies, setBunnies}) {
   const handleDelete = (deleteID) => {
     fetch(`/bunnies/${deleteID}`, {
       method: "DELETE",
