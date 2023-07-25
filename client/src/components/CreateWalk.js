@@ -2,20 +2,23 @@ import React, { useState, useEffect } from "react"
 import moment from "moment"
 import { useFormik } from 'formik'
 import * as yup from 'yup'
+import CreateBunny from "./CreateBunny"
 
-function CreateWalk() {
+function CreateWalk({bunnies, setBunnies}) {
   // State variables
   const [walk, setWalk] = useState(false)
   const [date, setDate] = useState("")
   const [startTime, setStartTime] = useState("")
-  const [endTime, setEndTime] = useState("")
   const [paths, setPaths] = useState(null)
-  const [count, setCount] = useState(1)
+  const [count, setCount] = useState(0)
+  const [spottedBunnies, setSpottedBunnies] = useState([]);
+
+
 
   useEffect(() => {
     fetch("/paths")
-      .then(r => r.json())
-      .then(data => setPaths(data))
+        .then(r => r.json())
+        .then(data => setPaths(data))
   }, [])
 
   // Form validation schema
@@ -68,6 +71,13 @@ function CreateWalk() {
     setDate(moment().format('l'))
   }
 
+  const handleAddBunny = (bunny_id) => {
+    console.log(bunny_id)
+    let new_count = count + 1
+    setCount(new_count)
+    setSpottedBunnies([...spottedBunnies, bunny_id])
+  }
+
   // Display when a walk has not been started
   if (!walk) {
     return (
@@ -81,6 +91,29 @@ function CreateWalk() {
   return (
     <div> <br/>
       <h2>{count} bunnies seen!</h2>
+    
+    {bunnies && <div>
+        
+        saved bunnies:
+        click on any of these bunnies when you see them to add them to the
+        {bunnies.map(bunny => {
+            return(
+                //will need to add css to this so they show very small 
+                <div key={bunny.id}>
+                <img src={bunny.headshot} alt={`Headshot of ${bunny.name}`} />
+                <h5>{bunny.name}</h5>
+                <h6>{bunny.description}</h6>
+                
+                <button onClick={() => handleAddBunny(bunny.id)}>spotted</button>
+                </div>
+            )
+        })}
+        <h5>Random Bunny</h5>
+                <img src="https://i.guim.co.uk/img/media/a6478477c7508115778a257a5011570f66032941/0_85_2048_1229/master/2048.jpg?width=1200&height=1200&quality=85&auto=format&fit=crop&s=afea1b033d076492c371b95545ba089f" alt={`Random Bunny Placeholder`} />
+                <button onClick={() => handleAddBunny(0)}>spotted</button>     
+        </div>}
+          
+   
       <h3>walk date: {date}</h3>
       <h3>walk start time: {startTime}</h3>
       <form onSubmit={formik.handleSubmit}>
